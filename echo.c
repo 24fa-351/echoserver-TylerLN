@@ -1,5 +1,6 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,11 +10,31 @@
 #define DEFAULT_PORT 46645
 #define LISTEN_BACKLOG 5
 
-void handle_connection(int a_client) {
+void* handle_connection(void* a_client_ptr) {
+  int a_client = *(int*)a_client_ptr;
+  free(a_client_ptr);
+
   char buffer[1024];
-  int bytes_read = read(a_client, buffer, sizeof(buffer));
-  printf("Received %d bytes: %.*s\n", bytes_read, bytes_read, buffer);
-  write(a_client, buffer, bytes_read);
+  int bytes_read;
+
+  while (1) {
+    bytes_read = read(a_client, buffer, sizeof(buffer) - 1);
+    if (bytes_read == 0) {
+      printf("End of connection on socket_fd %d\n", a_client);
+      break;
+    }
+    if (bytes_read < 0) {
+      perror("Error reading from socket");
+      break;
+    }
+
+    buffer[bytes_read] = '\0';
+    printf("Received from socket_fd %d: %s\n", a_client, buffer);
+    write(a_client, buffer, bytes_read);
+  }
+
+  close(a_client);
+  return NULL;
 }
 
 int main(int argc, char* argv[]) {
@@ -44,18 +65,14 @@ int main(int argc, char* argv[]) {
   socket_address.sin_addr.s_addr = htonl(INADDR_ANY);
   socket_address.sin_port = htons(port);
 
-  int return_value;
-
-  return_value = bind(socket_fd, (struct sockaddr*)&socket_address,
-                      sizeof(socket_address));
-  if (return_value < 0) {
+  if (bind(socket_fd, (struct sockaddr*)&socket_address,
+           sizeof(socket_address)) < 0) {
     perror("Bind failed");
     close(socket_fd);
     return 1;
   }
 
-  return_value = listen(socket_fd, LISTEN_BACKLOG);
-  if (return_value < 0) {
+  if (listen(socket_fd, LISTEN_BACKLOG) < 0) {
     perror("Listen failed");
     close(socket_fd);
     return 1;
@@ -74,8 +91,18 @@ int main(int argc, char* argv[]) {
       continue;
     }
 
-    handle_connection(client_fd);
-    close(client_fd);
+    int* client_fd_ptr = malloc(sizeof(int));
+    *client_fd_ptr = client_fd;
+
+    pthread_t thread;
+    if (pthread_create(&thread, NULL, handle_connection, client_fd_ptr) != 0) {
+      perror("Could not create thread");
+      free(client_fd_ptr);
+      close(client_fd);
+      continue;
+    }
+
+    pthread_detach(thread);
   }
 
   close(socket_fd);

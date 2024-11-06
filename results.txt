@@ -1,47 +1,69 @@
-Output 1:
-
+Ouput:
     Terminal 1:
         ./echo
-        Server listening on port 46645
+        Server Listening on port 46445
     Terminal 2:
         telnet localhost 46645
         Trying 127.0.0.1...
         Connected to localhost.
         Escape character is '^]'.
-        Spider man spider man does whatever a spider can
-        Spider man spider man does whatever a spider can
-        Connection closed by foreign host.
+        Something
+        Something
+        Coca Cola
+        Coca Cola
+        Christmas Time
+        Christmas Time
+        ^]
+        telnet> quit
+        Connection closed.
+       
     Terminal 1:
-        Received 50 bytes: Spider man spider man does whatever a spider can
-    Terminal 2:
+        Received from socket_fd 4: Something
+        Received from socket_fd 4: Coca Cola
+        Received from socket_fd 4: Christmas Time
+        End of connection on socket_fd 4
+    
+    Terminal 3:
         telnet localhost 46645
         Trying 127.0.0.1...
         Connected to localhost.
         Escape character is '^]'.
-        Second message
-        Second message
-        Connection closed by foreign host.
-    Terminal 2:
-        Received 50 bytes: Spider man spider man does whatever a spider can
-
-        Received 16 bytes: Second message
-
-Output 2:
-
+        hi
+        hi
+        Another terminal right here
+        Another terminal right here
+        ^]
+        telnet> quit
+        Connection closed.
     Terminal 1:
-        ./echo -p 888
-    Terminal 2:
-        telnet localhost 888
+        Received from socket_fd 5: hi
+        Received from socket_fd 5: Another terminal right here
+        End of connection on socket_fd 5
+    Terminal 4:
+        telnet localhost 46645
         Trying 127.0.0.1...
         Connected to localhost.
         Escape character is '^]'.
-        Different port  
-        Different port
-        Connection closed by foreign host.
-    Terminal 1:
-        Received 16 bytes: Different port
-    Terminal 2:
-        telnet localhost 2931
+        Marvel is Better
+        Marvel is Better
+    Terminal 5:
+        telnet localhost 46645
         Trying 127.0.0.1...
-        telnet: Unable to connect to remote host: Connection refused
-
+        Connected to localhost.
+        Escape character is '^]'.
+        No DC is
+        No DC is
+    Terminal 1:
+        Received from socket_fd 4: Marvel is Better
+        Received from socket_fd 5: No DC is
+    Terminal 4:
+        ^]  
+        telnet> quit
+        Connection closed.
+    Terminal 5:
+        ^]  
+        telnet> quit
+        Connection closed.
+    Terminal 1:
+        End of connection on socket_fd 4
+        End of connection on socket_fd 5
