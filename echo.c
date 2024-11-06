@@ -27,14 +27,14 @@ int main(int argc, char* argv[]) {
         return 1;
       }
     } else {
-      fprintf(stderr, "Usage: %s [-p port]\n", argv[0]);
+      fprintf(stderr, "Usage: %s -p port\n", argv[0]);
       return 1;
     }
   }
 
   int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (socket_fd < 0) {
-    perror("socket creation failed");
+    perror("Socket creation failed");
     return 1;
   }
 
@@ -49,14 +49,14 @@ int main(int argc, char* argv[]) {
   return_value = bind(socket_fd, (struct sockaddr*)&socket_address,
                       sizeof(socket_address));
   if (return_value < 0) {
-    perror("bind failed");
+    perror("Bind failed");
     close(socket_fd);
     return 1;
   }
 
   return_value = listen(socket_fd, LISTEN_BACKLOG);
   if (return_value < 0) {
-    perror("listen failed");
+    perror("Listen failed");
     close(socket_fd);
     return 1;
   }
@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     int client_fd = accept(socket_fd, (struct sockaddr*)&client_address,
                            &client_address_len);
     if (client_fd < 0) {
-      perror("accept failed");
+      perror("Accept failed");
       continue;
     }
 
