@@ -1,69 +1,51 @@
-Ouput:
-    Terminal 1:
-        ./echo
-        Server Listening on port 46445
-    Terminal 2:
-        telnet localhost 46645
-        Trying 127.0.0.1...
-        Connected to localhost.
-        Escape character is '^]'.
-        Something
-        Something
-        Coca Cola
-        Coca Cola
-        Christmas Time
-        Christmas Time
-        ^]
-        telnet> quit
-        Connection closed.
-       
-    Terminal 1:
-        Received from socket_fd 4: Something
-        Received from socket_fd 4: Coca Cola
-        Received from socket_fd 4: Christmas Time
-        End of connection on socket_fd 4
-    
-    Terminal 3:
-        telnet localhost 46645
-        Trying 127.0.0.1...
-        Connected to localhost.
-        Escape character is '^]'.
-        hi
-        hi
-        Another terminal right here
-        Another terminal right here
-        ^]
-        telnet> quit
-        Connection closed.
-    Terminal 1:
-        Received from socket_fd 5: hi
-        Received from socket_fd 5: Another terminal right here
-        End of connection on socket_fd 5
-    Terminal 4:
-        telnet localhost 46645
-        Trying 127.0.0.1...
-        Connected to localhost.
-        Escape character is '^]'.
-        Marvel is Better
-        Marvel is Better
-    Terminal 5:
-        telnet localhost 46645
-        Trying 127.0.0.1...
-        Connected to localhost.
-        Escape character is '^]'.
-        No DC is
-        No DC is
-    Terminal 1:
-        Received from socket_fd 4: Marvel is Better
-        Received from socket_fd 5: No DC is
-    Terminal 4:
-        ^]  
-        telnet> quit
-        Connection closed.
-    Terminal 5:
-        ^]  
-        telnet> quit
-        Connection closed.
-    Terminal 1:
-        End of connection on socket_fd 4
-        End of connection on socket_fd 5
+Terminal 1:
+    ./echo 46645
+    Server Listening on Port: 46645
+Terminal 2:
+    telnet localhost 46645
+    Trying 127.0.0.1...
+    Connected to localhost.
+    Escape character is '^]'.
+Terminal 3:
+    Trying 127.0.0.1...
+    Connected to localhost.
+    Escape character is '^]'.
+Terminal 1:
+    Accepted connection on 4
+    Handling connection on 4
+    Accepted connection on 5
+    Handling connection on 5
+Terminal 2:
+   This is from 4
+   This is from 4
+
+   Another one from 4
+   Another one from 4
+Terminal 3:
+    This is from 5
+    This is from 5
+Terminal 1:
+    Received From Connection 4: This is from 4
+    Received From Connection 5: This is from 5
+    Received From Connection 4: Another one from 4
+Terminal 3:
+    ^]
+    Connection closed.
+Terminal 2:
+    ^]
+    Connection closed.
+Terminal 1:
+    Closing Connection on 5
+    Closing connection on 5
+    Closing Connection on 4
+    Closing connection on 4
+
+
+Terminal 1:
+    ./echo 80
+    Server Listening on Port: 80
+Terminal 2:
+    telnet localhost 80
+    Trying 127.0.0.1...
+    Connected to localhost.
+    Escape character is '^]'.
