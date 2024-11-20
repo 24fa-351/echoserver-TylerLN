@@ -1,3 +1,4 @@
+#include "connection.h"
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <pthread.h>
@@ -8,44 +9,7 @@
 #include <unistd.h>
 
 #define LISTEN_BACKLOG 5
-#define MAX_BUFFER_SIZE 1024
 #define DEFAULT_PORT 46645
-
-void handle_connection(int* sock_fd_ptr) {
-  int sock_fd = *sock_fd_ptr;
-  free(sock_fd_ptr);
-
-  printf("Handling connection on %d\n", sock_fd);
-  char buffer[MAX_BUFFER_SIZE];
-  int bytes_read;
-
-  while (1) {
-    bytes_read = read(sock_fd, buffer, sizeof(buffer));
-    if (bytes_read > 0) {
-      buffer[bytes_read] = '\0';
-      printf("Received From Connection %d: %s\n", sock_fd, buffer);
-
-      if (strlen(buffer) == 0) {
-        printf("Closing Connection on %d\n", sock_fd);
-        break;
-      }
-
-      if (write(sock_fd, buffer, bytes_read) == -1) {
-        perror("Write failed");
-        break;
-      }
-    } else if (bytes_read == 0) {
-      printf("Closing Connection on %d\n", sock_fd);
-      break;
-    } else {
-      perror("Read failed");
-      break;
-    }
-  }
-
-  printf("Closing connection on %d\n", sock_fd);
-  close(sock_fd);
-}
 
 int main(int argc, char* argv[]) {
   int port = DEFAULT_PORT;
